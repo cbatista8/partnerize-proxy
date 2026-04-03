@@ -14,13 +14,19 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: "API keys not configured on server" });
   }
 
+  const base = "https://api.partnerize.com";
   const endpoint = path
-    ? `https://${APP_KEY}:${USER_KEY}@api.partnerize.com/${path}`
-    : `https://${APP_KEY}:${USER_KEY}@api.partnerize.com/reporting/report_advertiser/campaign/${campaignId}/publisher.json?limit=300`;
+    ? `${base}/${path}`
+    : `${base}/reporting/report_advertiser/campaign/${campaignId}/publisher.json?limit=300`;
+
+  const credentials = Buffer.from(`${APP_KEY}:${USER_KEY}`).toString("base64");
 
   try {
     const response = await fetch(endpoint, {
-      headers: { "Content-Type": "application/json" }
+      headers: {
+        "Authorization": `Basic ${credentials}`,
+        "Content-Type": "application/json"
+      }
     });
     const data = await response.json();
     if (!response.ok) return res.status(response.status).json(data);
