@@ -5,8 +5,8 @@ export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
   if (req.method === "OPTIONS") return res.status(200).end();
 
-  const { campaignId } = req.query;
-  if (!campaignId) return res.status(400).json({ error: "campaignId is required" });
+  const { campaignId, path } = req.query;
+  if (!campaignId && !path) return res.status(400).json({ error: "campaignId or path is required" });
 
   const APP_KEY = process.env.PARTNERIZE_APP_KEY;
   const USER_KEY = process.env.PARTNERIZE_USER_KEY;
