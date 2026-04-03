@@ -1,5 +1,4 @@
 export default async function handler(req, res) {
-  // Allow requests from any origin (CORS fix)
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
@@ -15,15 +14,14 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: "API keys not configured on server" });
   }
 
-  try {
-    const url = `https://api.partnerize.com/v2/brand/campaigns/${campaignId}/partners?limit=300`;
-    const response = await fetch(url, {
-      headers: {
-        "Authorization": "Basic " + Buffer.from(`${APP_KEY}:${USER_KEY}`).toString("base64"),
-        "Content-Type": "application/json"
-      }
-    });
+  const endpoint = path
+    ? `https://${APP_KEY}:${USER_KEY}@api.partnerize.com/${path}`
+    : `https://${APP_KEY}:${USER_KEY}@api.partnerize.com/reporting/report_advertiser/campaign/${campaignId}/publisher.json?limit=300`;
 
+  try {
+    const response = await fetch(endpoint, {
+      headers: { "Content-Type": "application/json" }
+    });
     const data = await response.json();
     if (!response.ok) return res.status(response.status).json(data);
     res.status(200).json(data);
