@@ -16,7 +16,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const url = `https://api.performancehorizon.com/user/advertiser/self/campaign/${campaignId}/publisher.json?limit=300`;
+    const url = `https://api.partnerize.com/v2/brand/campaigns/${campaignId}/partners?limit=300`;
     const response = await fetch(url, {
       headers: {
         "Authorization": "Basic " + Buffer.from(`${APP_KEY}:${USER_KEY}`).toString("base64"),
